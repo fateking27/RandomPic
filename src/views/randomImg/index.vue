@@ -1,7 +1,7 @@
 <template>
   <div class="min-h-[100vh]">
     <div class="common-layout flex">
-      <div class="ad w-[15vw] bg-slate-400"></div>
+      <div class="ad w-[15vw]"></div>
       <el-container class="w-[70vw]">
         <el-header class="flex items-center max-[375px]:justify-center fixed z-10 bg-white w-[100%]">
           <div class="flex h-10" style="line-height: 40px;">
