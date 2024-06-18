@@ -10,8 +10,8 @@
           </div>
         </el-header>
         <el-main style="padding: 10px;" class="mt-[50px]">
-          <div class="random_img flex justify-center items-center mb-[20px]">
-            <el-image :src="imgValue.url" fit="cover">
+          <div class="random_img flex justify-center items-center mb-[20px] min-h-[355px]">
+            <el-image :src="imgValue.url" fit="contain">
               <template #placeholder>
                 <div id="loader">
                   <div id="shadow"></div>
@@ -46,7 +46,17 @@
               <span></span>
             </div>
           </div>
-          <el-card>
+          <el-card class="min-[680px]:hidden mt-[20px] text-xs" v-for="item in tableData" :key="item.url">
+            <div class="flex justify-center flex-wrap">
+              <div class="text-center">
+                <h4>{{ item.description }}：</h4>
+              </div>
+              <div class="text-center">
+                <span class="text-red-700" @click="toPage(item.url)">{{ item.url }}</span>
+              </div>
+            </div>
+          </el-card>
+          <el-card class="max-[680px]:hidden">
             <el-table :data="tableData" style="width: 100%">
               <el-table-column prop="description" label="描述" />
               <el-table-column prop="req" label="请求方式"></el-table-column>
