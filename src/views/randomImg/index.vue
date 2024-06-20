@@ -32,10 +32,12 @@
           <div class="text-slate-500" style="line-height: 24px;">
             <div class="mt-[15px]">
               <p>当前随机图池中有 <span class="text-red-700">{{ imgValue.total }}</span> 张图片</p>
-              <span>API 当日调用 <span class="text-red-700">{{ imgValue.today_counts }}</span> 次，共计调用 <span
-                  class="text-red-700">{{
-                    imgValue.counts
-                  }}</span> 次</span>
+              <span>API <span>近三小时调用( {{ moment().subtract(2, 'hours').format('H') }}:00-{{ moment().add(1,'hours').format('H') }}:00 ) <span
+                    class="text-red-700">{{
+                      imgValue.three_hours_counts }}</span> 次，</span> 当日调用
+                <span class="text-red-700">{{ imgValue.today_counts }}</span> 次，共计调用 <span class="text-red-700">{{
+                  imgValue.counts
+                }}</span> 次</span>
 
               <p>当前随机图池都是偏向于二次元风格的图片，更多风格内容持续更新中......</p>
               <p>由于部分图片存储使用的是第三方图床服务所以无法保证稳定性与访问速度</p>
@@ -93,6 +95,7 @@ import { onMounted, ref, reactive } from 'vue'
 import { getRandomImg } from '@/api/randomImg'
 import useClipboard from 'vue-clipboard3'
 import { ElNotification } from 'element-plus';
+import moment from 'moment'
 
 const { toClipboard } = useClipboard()
 
@@ -128,6 +131,7 @@ const imgValue = reactive({
   url: '',
   counts: '',
   today_counts: '',
+  three_hours_counts: '',
   total: ''
 })
 
@@ -137,6 +141,7 @@ const getRandomImgJson = async (data?: any) => {
   imgValue.id = res.data.data.id
   imgValue.counts = res.data.api_counts_info.counts
   imgValue.today_counts = res.data.api_counts_info.today_counts
+  imgValue.three_hours_counts = res.data.api_counts_info.three_hours_counts
   imgValue.total = res.data.total
   text.value = res.data.data.url
 }
