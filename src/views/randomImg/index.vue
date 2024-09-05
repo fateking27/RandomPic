@@ -150,13 +150,13 @@ const tableData = [
   {
     description: '随机获得一张图片',
     req: 'GET',
-    url: 'https://api.animex.top/api/v1/random_img?type=image',
+    url: `${import.meta.env.VITE_API_PATH}/random_img?type=image'`,
     remark: '直接返回一张图片'
   },
   {
     description: '以json形式返回数据',
     req: 'GET',
-    url: 'https://api.animex.top/api/v1/random_img?type=json',
+    url: `${import.meta.env.VITE_API_PATH}/random_img?type=json`,
     remark: '返回json数据和状态码'
   },
 ]
