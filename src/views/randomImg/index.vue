@@ -150,7 +150,7 @@ const tableData = [
   {
     description: '随机获得一张图片',
     req: 'GET',
-    url: `${import.meta.env.VITE_API_PATH}/random_img?type=image'`,
+    url: `${import.meta.env.VITE_API_PATH}/random_img?type=image`,
     remark: '直接返回一张图片'
   },
   {
