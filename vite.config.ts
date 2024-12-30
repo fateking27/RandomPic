@@ -5,6 +5,7 @@ import vue from '@vitejs/plugin-vue'
 import AutoImport from 'unplugin-auto-import/vite'
 import Components from 'unplugin-vue-components/vite'
 import { ElementPlusResolver } from 'unplugin-vue-components/resolvers'
+import ElementPlus from 'unplugin-element-plus/vite'
 
 const root: string = process.cwd()
 
@@ -12,22 +13,32 @@ const root: string = process.cwd()
 export default ({ command, mode }: ConfigEnv): UserConfigExport => {
   const { VITE_PORT } = loadEnv(mode, root)
   return {
-    base:'./',
+    base: './',
     root,
-    plugins: [
-      vue(),
-      AutoImport({
-        resolvers: [ElementPlusResolver()]
-      }),
-      Components({
-        resolvers: [ElementPlusResolver()]
-      })
-    ],
     resolve: {
       alias: {
         '@': fileURLToPath(new URL('./src', import.meta.url))
       }
     },
+    css: {
+      preprocessorOptions: {
+        scss: {
+          additionalData: `@use "@/styles/element/index.scss" as *;`
+        }
+      }
+    },
+    plugins: [
+      vue(),
+      AutoImport({
+        resolvers: [ElementPlusResolver({ importStyle: 'sass' })]
+      }),
+      Components({
+        resolvers: [ElementPlusResolver({ importStyle: 'sass' })]
+      }),
+      ElementPlus({
+        useSource: true
+      })
+    ],
     // 服务端渲染
     server: {
       // 端口号

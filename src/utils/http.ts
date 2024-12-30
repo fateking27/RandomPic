@@ -15,17 +15,17 @@ newAxios.interceptors.request.use((req) => {
     return req;
 })
 
-//响应拦截
-// newAxios.interceptors.response.use(
-//     (res) => {
-//         return res;
-//     },
-//     (err) => {
-//         if (err.response && err.response.status === 401) {
-//             location.href = '/login'
-//         }
-//         return Promise.reject(err);
-//     }
-// )
+// 响应拦截
+newAxios.interceptors.response.use(
+    (res) => {
+        return res.data;
+    },
+    (err) => {
+        if (err.response && err.response.status === 401) {
+            location.href = '/login'
+        }
+        return Promise.reject(err);
+    }
+)
 
 export default newAxios
