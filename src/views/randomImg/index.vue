@@ -1,14 +1,8 @@
 <template>
-  <div class="min-h-[100vh]">
+  <!-- <div class="min-h-[100vh]"> -->
     <div class="common-layout flex">
       <div class="ad w-[15vw]"></div>
       <el-container class="w-[70vw]">
-        <el-header
-          class="flex items-center max-[375px]:justify-center fixed z-10 bg-white w-[100%]"
-        >
-          <div class="flex h-10" style="line-height: 40px">
-            <h2>ANIME<span class="text-red-700">X</span></h2>
-            &nbsp;
         <el-header
           class="flex items-center max-[375px]:justify-center fixed z-10 bg-white w-[100%]"
         >
@@ -56,7 +50,6 @@
           </div>
           <h2 class="title mt-[20px]">| 参数说明</h2>
           <div class="text-slate-500" style="line-height: 24px">
-          <div class="text-slate-500" style="line-height: 24px">
             <div class="mt-[15px]">
               <p>
                 当前随机图池中有 <span class="text-red-700">{{ imgValue.total }}</span> 张图片
@@ -101,11 +94,6 @@
             v-for="item in tableData"
             :key="item.url"
           >
-          <el-card
-            class="min-[680px]:hidden mt-[20px] text-xs"
-            v-for="item in tableData"
-            :key="item.url"
-          >
             <div class="flex justify-center flex-wrap">
               <div class="text-center">
                 <h4>{{ item.description }}：</h4>
@@ -136,10 +124,6 @@
       </el-container>
       <div class="ad w-[15vw]"></div>
     </div>
-    <el-footer
-      style="min-height: 100px"
-      class="bg-slate-800 w-[100%] text-slate-50 flex items-center max-[680px]:justify-center"
-    >
       <div class="text-center">
     <el-footer
       style="min-height: 100px"
@@ -158,7 +142,6 @@
 import { onMounted, ref, reactive } from 'vue'
 import { getRandomImg } from '@/api/randomImg'
 import useClipboard from 'vue-clipboard3'
-import { ElNotification } from 'element-plus'
 import { ElNotification } from 'element-plus'
 import moment from 'moment'
 
@@ -221,9 +204,6 @@ const toPage = (path?: string) => {
   let url = path
     ? window.location.protocol + '//' + path.split('//')[1]
     : window.location.protocol + '//' + 'www.animex.top'
-  let url = path
-    ? window.location.protocol + '//' + path.split('//')[1]
-    : window.location.protocol + '//' + 'www.animex.top'
   window.open(url, '_blank')
 }
 
@@ -275,17 +255,15 @@ const tableData = [
     description: '随机获得一张图片',
     req: 'GET',
     url: `${import.meta.env.VITE_API_PATH}/random_img?type=image`,
-    url: `${import.meta.env.VITE_API_PATH}/random_img?type=image`,
     remark: '直接返回一张图片'
   },
   {
     description: '以json形式返回数据',
     req: 'GET',
     url: `${import.meta.env.VITE_API_PATH}/random_img?type=json`,
-    url: `${import.meta.env.VITE_API_PATH}/random_img?type=json`,
     remark: '返回json数据和状态码'
   }
-  }
+  
 ]
 
 const isUserAgent = () => {
