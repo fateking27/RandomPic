@@ -9,6 +9,12 @@
           <div class="flex h-10" style="line-height: 40px">
             <h2>ANIME<span class="text-red-700">X</span></h2>
             &nbsp;
+        <el-header
+          class="flex items-center max-[375px]:justify-center fixed z-10 bg-white w-[100%]"
+        >
+          <div class="flex h-10" style="line-height: 40px">
+            <h2>ANIME<span class="text-red-700">X</span></h2>
+            &nbsp;
             <h3 class="text-zinc-400">| API 接口服务</h3>
           </div>
         </el-header>
@@ -27,15 +33,45 @@
           </div>
           <div class="img_id">
             <h1 class="text-3xl">图片编号：# {{ imgValue.id }}</h1>
+            <div class="hidden">
+              <div class="mt-[20px] w-[325px]">
+                <el-input v-model="message"></el-input>
+              </div>
+              <div class="mt-[20px] w-[325px]">
+                <el-input v-model="serveMsg" disabled></el-input>
+              </div>
+            </div>
             <div class="mt-[20px] flex flex-wrap">
               <el-button type="primary" @click="getRandomImgJson(data)">换一张</el-button>
               <el-button type="success" @click="handleCopy()">复制链接</el-button>
+              <el-button
+                style="display: none"
+                type="danger"
+                @click="sendMessage()"
+                :disabled="!message"
+                >WS消息发送测试</el-button
+              >
               <!-- <el-button type="danger">色图 MODE</el-button> -->
             </div>
           </div>
           <h2 class="title mt-[20px]">| 参数说明</h2>
           <div class="text-slate-500" style="line-height: 24px">
+          <div class="text-slate-500" style="line-height: 24px">
             <div class="mt-[15px]">
+              <p>
+                当前随机图池中有 <span class="text-red-700">{{ imgValue.total }}</span> 张图片
+              </p>
+              <span
+                >API
+                <span
+                  >近三小时调用( {{ moment().subtract(2, 'hours').format('H') }}:00-{{
+                    moment().add(1, 'hours').format('H')
+                  }}:00 )
+                  <span class="text-red-700">{{ imgValue.three_hours_counts }}</span> 次，</span
+                >
+                当日调用 <span class="text-red-700">{{ imgValue.today_counts }}</span> 次，共计调用
+                <span class="text-red-700">{{ imgValue.counts }}</span> 次</span
+              >
               <p>
                 当前随机图池中有 <span class="text-red-700">{{ imgValue.total }}</span> 张图片
               </p>
@@ -56,9 +92,15 @@
             </div>
             <div>
               <br />
+              <br />
               <span></span>
             </div>
           </div>
+          <el-card
+            class="min-[680px]:hidden mt-[20px] text-xs"
+            v-for="item in tableData"
+            :key="item.url"
+          >
           <el-card
             class="min-[680px]:hidden mt-[20px] text-xs"
             v-for="item in tableData"
@@ -99,6 +141,11 @@
       class="bg-slate-800 w-[100%] text-slate-50 flex items-center max-[680px]:justify-center"
     >
       <div class="text-center">
+    <el-footer
+      style="min-height: 100px"
+      class="bg-slate-800 w-[100%] text-slate-50 flex items-center max-[680px]:justify-center"
+    >
+      <div class="text-center">
         <span>Copyright © 2024.</span>
         <span class="text-red-700 cursor-pointer" @click="toPage()"> ANIMEX.TOP</span>
         <span> Allrights Reserved.</span>
@@ -112,11 +159,68 @@ import { onMounted, ref, reactive } from 'vue'
 import { getRandomImg } from '@/api/randomImg'
 import useClipboard from 'vue-clipboard3'
 import { ElNotification } from 'element-plus'
+import { ElNotification } from 'element-plus'
 import moment from 'moment'
 
 const { toClipboard } = useClipboard()
 
+let ws = new WebSocket(import.meta.env.VITE_WS_PATH)
+let interval = null
+
+const handleOpen = () => {
+  console.log('[WebSocket connection established]--连接成功')
+  // interval = setInterval(sendMessage, 5000)
+}
+
+const handleClose = () => {
+  console.log('WebSocket connection closed')
+  reLink()
+}
+
+const handleMessage = (event: any) => {
+  // const { data } = JSON.parse(event.data)
+  console.log(event.data)
+  serveMsg.value = event.data
+}
+
+const handleError = () => {
+  console.log('WebSocket connection error')
+}
+
+ws.addEventListener('open', handleOpen)
+ws.addEventListener('close', handleClose)
+ws.addEventListener('message', handleMessage)
+ws.addEventListener('error', handleError)
+// 重连
+let timer: any = null
+const reLink = () => {
+  console.log('connecting failed, preparing relink...')
+  let relinkTime = 3000
+  timer = setInterval(() => {
+    console.log('relinking....')
+    ws = new WebSocket(import.meta.env.VITE_WS_PATH)
+    if (ws.readyState === 0) {
+      clearInterval(timer)
+      timer = null
+      ws.addEventListener('open', handleOpen)
+      ws.addEventListener('close', handleClose)
+      ws.addEventListener('message', handleMessage)
+      ws.addEventListener('error', handleError)
+    } else {
+      relinkTime = relinkTime
+    }
+  }, relinkTime)
+}
+const message = ref('')
+const serveMsg = ref('')
+const sendMessage = () => {
+  ws.send(message.value)
+}
+
 const toPage = (path?: string) => {
+  let url = path
+    ? window.location.protocol + '//' + path.split('//')[1]
+    : window.location.protocol + '//' + 'www.animex.top'
   let url = path
     ? window.location.protocol + '//' + path.split('//')[1]
     : window.location.protocol + '//' + 'www.animex.top'
@@ -133,6 +237,7 @@ const handleCopy = async () => {
       message: '╰(￣ω￣ｏ)'
     })
   } catch (e) {
+    console.error(e)
     console.error(e)
     ElNotification({
       title: '复制失败',
@@ -170,13 +275,16 @@ const tableData = [
     description: '随机获得一张图片',
     req: 'GET',
     url: `${import.meta.env.VITE_API_PATH}/random_img?type=image`,
+    url: `${import.meta.env.VITE_API_PATH}/random_img?type=image`,
     remark: '直接返回一张图片'
   },
   {
     description: '以json形式返回数据',
     req: 'GET',
     url: `${import.meta.env.VITE_API_PATH}/random_img?type=json`,
+    url: `${import.meta.env.VITE_API_PATH}/random_img?type=json`,
     remark: '返回json数据和状态码'
+  }
   }
 ]
 
@@ -223,6 +331,7 @@ onMounted(() => {
 @keyframes loader {
   0% {
     left: -100px;
+    left: -100px;
   }
 
   100% {
@@ -234,6 +343,7 @@ onMounted(() => {
   width: 50px;
   height: 50px;
   background: #2b93f5;
+  animation: animate 0.5s linear infinite;
   animation: animate 0.5s linear infinite;
   position: absolute;
   top: 0;
@@ -251,6 +361,7 @@ onMounted(() => {
   }
 
   50% {
+    transform: translateY(18px) scale(1, 0.9) rotate(45deg);
     transform: translateY(18px) scale(1, 0.9) rotate(45deg);
     border-bottom-right-radius: 40px;
   }
@@ -274,6 +385,7 @@ onMounted(() => {
   left: 0;
   border-radius: 50%;
   animation: shadow 0.5s linear infinite;
+  animation: shadow 0.5s linear infinite;
 }
 
 @keyframes shadow {
@@ -282,3 +394,4 @@ onMounted(() => {
   }
 }
 </style>
+
