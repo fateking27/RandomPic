@@ -1,9 +1,10 @@
 import { createRouter, createWebHashHistory } from 'vue-router'
-import RandomImgView from '@/views/randomImg/index.vue'
 import Layout from '@/components/layout/index.vue'
+import { KeepAlive } from 'vue'
 
 const router = createRouter({
   history: createWebHashHistory(import.meta.env.BASE_URL),
+  scrollBehavior: () => ({ left: 0, top: 0 }),
   routes: [
     {
       path: '/',
@@ -13,8 +14,60 @@ const router = createRouter({
       children: [
         {
           path: 'home',
-          name: 'home',
-          component: () => import('@/views/main/index.vue')
+          name: 'Home',
+          component: () => import('@/views/home/index.vue'),
+          meta: {
+            title: '首页',
+            KeepAlive: true
+          }
+        },
+        {
+          path: 'pictures',
+          name: 'Pictures',
+          component: () => import('@/views/pictures/index.vue'),
+          meta: {
+            title: '次元图库'
+          }
+        },
+        {
+          path: 'imagedetail',
+          name: 'ImageDetail',
+          component: () => import('@/views/pictures/imageDetail.vue'),
+          meta: {
+            title: '图片详情'
+          }
+        },
+        {
+          path: 'imageUpload',
+          name: 'uploadImage',
+          component: () => import('@/views/pictures/uploadPage.vue'),
+          meta: {
+            title: '壁纸上传'
+          }
+        },
+        {
+          path: 'animelist',
+          name: 'AnimeList',
+          component: () => import('@/views/anime/animeList/index.vue'),
+          meta: {
+            title: '全部动画'
+          }
+        },
+        {
+          path: 'animecalendar',
+          name: 'AnimeCalendar',
+          component: () => import('@/views/anime/animeCalendar/index.vue'),
+          meta: {
+            title: '新番放送表'
+          }
+        },
+        {
+          path: 'resource/novel',
+          name: 'ResourceNovel',
+          component: () => import('@/views/resource/novel/index.vue'),
+          meta: {
+            title: '轻小说资源'
+          }
         }
       ]
     },
@@ -29,6 +82,11 @@ const router = createRouter({
       component: () => import('@/views/randomImg/index.vue')
     }
   ]
+})
+
+router.beforeEach((to, from, next) => {
+  document.title = 'ANIMEX | ' + to.meta.title || 'ANIMEX'
+  next()
 })
 
 export default router

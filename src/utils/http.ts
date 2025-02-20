@@ -10,8 +10,6 @@ const newAxios = axios.create({
 
 //请求拦截
 newAxios.interceptors.request.use((req) => {
-    // 配置前端发给后端的数据格式
-    req.headers["Content-Type"] = 'application/json';
     return req;
 })
 

@@ -57,8 +57,8 @@
               <span
                 >API
                 <span
-                  >近三小时调用( {{ moment().subtract(2, 'hours').format('H') }}:00-{{
-                    moment().add(1, 'hours').format('H')
+                  >近三小时调用( {{ dayjs().subtract(2, 'hours').format('H') }}:00-{{
+                    dayjs().add(1, 'hours').format('H')
                   }}:00 )
                   <span class="text-red-700">{{ imgValue.three_hours_counts }}</span> 次，</span
                 >
@@ -71,8 +71,8 @@
               <span
                 >API
                 <span
-                  >近三小时调用( {{ moment().subtract(2, 'hours').format('H') }}:00-{{
-                    moment().add(1, 'hours').format('H')
+                  >近三小时调用( {{ dayjs().subtract(2, 'hours').format('H') }}:00-{{
+                    dayjs().add(1, 'hours').format('H')
                   }}:00 )
                   <span class="text-red-700">{{ imgValue.three_hours_counts }}</span> 次，</span
                 >
@@ -143,7 +143,7 @@ import { onMounted, ref, reactive } from 'vue'
 import { getRandomImg } from '@/api/randomImg'
 import useClipboard from 'vue-clipboard3'
 import { ElNotification } from 'element-plus'
-import moment from 'moment'
+import dayjs from 'dayjs'
 
 const { toClipboard } = useClipboard()
 

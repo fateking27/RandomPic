@@ -1,13 +1,17 @@
 <template>
-  <div class="layout min-h-[100vh]" ref="scrollContainer">
+  <div
+    class="layout min-h-[100vh]"
+    ref="scrollContainer"
+    style="background-image: linear-gradient(120deg, #ffe3e3 0%, #c7ebfd 100%)"
+  >
     <div
-      class="header min-w-[100%] h-[60px] flex justify-center bg-[#ffffff]"
+      class="header mb-[30px] w-[100vw] flex justify-center bg-[#ffffff]"
       :style="{
         position: isFixed
         // top
       }"
     >
-      <div class="menu w-[1200px] h-[100%] flex items-center">
+      <div class="menu w-[1200px] max-sm:w-[100vw] h-[100%] flex items-center">
         <div class="logo flex justify-center w-[140px]">
           <img
             class="w-[100%] mt-[-10px]"
@@ -15,10 +19,10 @@
             alt=""
           />
         </div>
-        <div class="p-[10px] flex items-center">
+        <div class="p-[10px] pl-0 flex items-center">
           <div class="menu_item">
             <el-dropdown :hide-on-click="false">
-              <el-link :underline="false">首页</el-link>
+              <el-link href="#/home" :underline="false">首页</el-link>
             </el-dropdown>
           </div>
           <div class="menu_item">
@@ -29,10 +33,10 @@
               </el-link>
               <template #dropdown>
                 <el-dropdown-menu>
-                  <el-dropdown-item>动画</el-dropdown-item>
-                  <el-dropdown-item>轻小说</el-dropdown-item>
-                  <el-dropdown-item>漫画</el-dropdown-item>
-                  <el-dropdown-item>其他</el-dropdown-item>
+                  <el-dropdown-item><el-link :underline="false">动画</el-link></el-dropdown-item>
+                  <el-dropdown-item><el-link :underline="false">轻小说</el-link></el-dropdown-item>
+                  <el-dropdown-item><el-link :underline="false">漫画</el-link></el-dropdown-item>
+                  <el-dropdown-item><el-link :underline="false">其他</el-link></el-dropdown-item>
                 </el-dropdown-menu>
               </template>
             </el-dropdown>
@@ -44,7 +48,7 @@
           </div>
           <div class="menu_item">
             <el-dropdown :hide-on-click="false">
-              <el-link :underline="false">次元图库</el-link>
+              <el-link href="#/pictures" :underline="false">次元图库</el-link>
             </el-dropdown>
           </div>
           <div class="menu_item">
@@ -54,9 +58,17 @@
               ></el-link>
               <template #dropdown>
                 <el-dropdown-menu>
-                  <el-dropdown-item>动漫番剧</el-dropdown-item>
-                  <el-dropdown-item>轻小说</el-dropdown-item>
-                  <el-dropdown-item>实用软件</el-dropdown-item>
+                  <el-dropdown-item
+                    ><el-link :underline="false">动漫番剧</el-link></el-dropdown-item
+                  >
+                  <el-dropdown-item
+                    ><el-link href="#/resource/novel" :underline="false"
+                      >轻小说</el-link
+                    ></el-dropdown-item
+                  >
+                  <el-dropdown-item
+                    ><el-link :underline="false">实用软件</el-link></el-dropdown-item
+                  >
                 </el-dropdown-menu>
               </template>
             </el-dropdown>
@@ -64,11 +76,11 @@
         </div>
       </div>
     </div>
-    <div class="main w-[1200px] m-[auto]">
+    <div class="main m-[auto] w-[1200px] max-[300px]:w-[100vw] max-sm:w-[100vw]">
       <router-view></router-view>
     </div>
     <div
-      class="footer mt-5 min-w-[100%] bg-[#e3e3e3] bg-opacity-40 text-center text-[#666] text-[12px] pt-5 pb-10"
+      class="footer mt-5 bg-[#e3e3e3] bg-opacity-40 text-center text-[#666] text-[12px] pt-5 pb-10 text-wrap"
     >
       <div class="p-[5px]">
         Animex次元社所有内容均收集自其他网站，本站不参与组织扫图、翻译、录入等工作
@@ -87,12 +99,11 @@
 
 <script setup lang="ts">
 import { ref, onMounted, onUnmounted } from 'vue'
-import { ArrowDown, CaretBottom } from '@element-plus/icons-vue'
-import moment from 'moment'
+import { CaretBottom } from '@element-plus/icons-vue'
+import dayjs from 'dayjs'
 
 const scrollContainer = ref()
 const isFixed = ref()
-const top = ref()
 const initTime = ref()
 
 const handleScroll = (event: any) => {
@@ -108,7 +119,7 @@ const handleScroll = (event: any) => {
 onMounted(() => {
   window.addEventListener('scroll', handleScroll)
   setInterval(() => {
-    initTime.value = moment().format('YYYY-MM-DD HH:mm:ss')
+    initTime.value = dayjs().format('YYYY-MM-DD HH:mm:ss')
   }, 1000)
 })
 
@@ -124,9 +135,10 @@ onUnmounted(() => {
 .header {
   box-shadow: rgba(33, 35, 38, 0.2) 0px 10px 10px -10px;
   line-height: 100%;
-  z-index: 9;
+  z-index: 999;
   .menu_item {
     padding: 10px;
+    padding-right: 0;
     .arrow_down {
       transition: transform 0.3s ease-in-out;
     }

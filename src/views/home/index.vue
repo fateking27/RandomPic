@@ -1,5 +1,5 @@
 <template>
-  <div class="pt-[30px]">
+  <div>
     <div class="flex justify-between">
       <div class="block text-center w-[475px]">
         <el-carousel height="250px" class="rounded-lg" motion-blur>
@@ -90,7 +90,7 @@
         <div class="text-[13px] relative">
           <div
             v-for="(item, index) in 6"
-            class="h-[21px] m-[5px] ml-0 leading-[20px] cursor-pointer"
+            class="h-[21px] m-[7px] ml-0 leading-[20px] cursor-pointer"
           >
             <div
               :data-num="index + 1"
@@ -122,7 +122,7 @@
               class="relative rounded-lg z-0"
               v-for="item in animeCalendarData?.rows"
               :key="item.week_date"
-              :label="item.week_date == moment().format('ddd') ? '今天' : item.week_date_zh"
+              :label="item.week_date == dayjs().format('ddd') ? '今天' : item.week_date_zh"
               :name="item.week_date"
             >
               <div
@@ -198,56 +198,90 @@
           </div>
         </div>
       </div>
-      <div
-        class="w-[300px] text-center leading-[350px] bg-opacity-50 bg-white box-border p-[10px] rounded-lg"
-      >
-        本季热门新番
+      <div class="w-[300px] bg-opacity-50 bg-white box-border p-[10px] rounded-lg">
+        <div class="flex justify-between h-[30px] leading-[30px]">
+          <h4>本季热门新番</h4>
+          <h6
+            class="hover:text-[#ff9f9f] cursor-pointer transition-all"
+            @click="$router.push('/animelist')"
+          >
+            更多>>
+          </h6>
+        </div>
+        <div>
+          <div
+            class="flex justify-between w-[100%] h-[60px] m-[5px] mr-0 ml-0 overflow-hidden"
+            v-for="(item, index) in hotAnimeData?.slice(0, 5)"
+            :key="item.id"
+          >
+            <div class="rounded-md overflow-hidden h-[100%] w-[85px]">
+              <el-image :src="item.cover" style="width: 85px; cursor: pointer"></el-image>
+            </div>
+            <div>
+              <div class="title w-[190px] text-[12px] h-[20px] truncate cursor-pointer">
+                <el-link
+                  ><span>{{ item.name_zh }}&nbsp;</span>
+                  <span class="text-[10px]">{{ item.name }}</span></el-link
+                >
+              </div>
+              <div class="w-[190px] flex flex-wrap content-between">
+                <div class="w-[100%] text-[11px] h-[15px] overflow-hidden truncate">
+                  <span>{{ item.info }}</span>
+                </div>
+                <starRate :data="item" />
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
     <div class="flex justify-between mt-[30px] h-[auto]">
       <div class="left w-[870px] bg-opacity-50 bg-white box-border p-[10px] rounded-lg">
         <div class="flex justify-between h-[30px] leading-[30px]">
           <h3>次元图库</h3>
-          <el-link :underline="false">更多>></el-link>
+          <el-link href="#/pictures" :underline="false">更多>></el-link>
         </div>
         <div class="flex justify-between flex-wrap">
-          <div v-for="item in 10" class="mt-[10px]">
+          <div
+            v-for="item in picturesData"
+            @click="() => $router.push({ path: '/imagedetail', query: { id: item.id } })"
+            class="mt-[10px] relative"
+          >
+            <div class="cover h-[150px] w-[150px] overflow-hidden cursor-pointer">
+              <el-image style="width: 100%; height: 100%" fit="contain" :src="item.url" />
+            </div>
             <div
-              class="cover h-[150px] w-[150px] bg-slate-300 rounded-lg overflow-hidden cursor-pointer"
+              class="cursor-pointer hover:text-[#ed7b7b] w-[150px] truncate text-center text-white bg-[#f4a9a9] bg-opacity-70 absolute bottom-0"
             >
-              <el-image
-                style="width: 100%; height: 100%"
-                fit="contain"
-                src="https://opreviews.anime-pictures.net/75a/75aab83e8503e16238d13883cc2d3f4b_lp.jpg"
-                :alt="item"
-              />
+              {{ item.size }}
             </div>
           </div>
         </div>
       </div>
+
       <div class="right w-[300px] bg-opacity-50 bg-white box-border p-[10px] rounded-lg">
         <div class="flex justify-between h-[30px] leading-[30px]">
-          <h4>Pixiv周排行</h4>
+          <h4>Pixiv插画今日排行</h4>
         </div>
         <div class="text-[13px] relative">
           <div
-            v-for="(item, index) in 7"
-            class="h-[21px] m-[5px] ml-0 mr-0 leading-[20px] cursor-pointer"
+            v-for="(item, index) in pixivRankData?.slice(0, 6)"
+            :key="item.img_id"
+            class="h-[21px] m-[7px] ml-0 mr-0 leading-[20px] cursor-pointer"
             :id="'pic_befcolor_' + index"
           >
             <el-image
               style="position: absolute; top: 0; left: 0; border-radius: 0 0 8px 8px"
-              fit="fill"
-              src="https://cube.elemecdn.com/6/94/4d3ea53c084bad6931a56d5158a48jpeg.jpeg"
-              v-if="index === 0"
+              fit="cover"
+              :src="VITE_IMG_PATH + '/thumbnail/' + item.file_url.split('/pixiv/')[1]"
+              v-if="item.rank === 1"
             ></el-image>
             <div
-              :data-num="'TOP ' + (index + 1)"
+              :data-num="'TOP ' + item.rank"
               class="truncate before:content-[attr(data-num)] before:bg-slate-300 before:text-[#fff] before:absolute before:h-[20px] before:leading-[20px] before:rounded-tr-lg before:rounded-br-lg before:text-center before:text-[11px] before:font-style-[italic] before:w-[40px] before:left-[-10px]"
             >
               <span class="ml-[35px] transition-all ease-in hover:text-[#ed7b7b]">
-                轻小说速递】八奈见的败北，竟全拜某蓝发败犬所赐？
-                【轻小说速递】八奈见的败北，竟全拜某蓝发败犬所赐？
+                {{ item.title }}
               </span>
             </div>
           </div>
@@ -259,10 +293,16 @@
 
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
-import { getAnimeCalendar } from '@/api/anime_calendar'
+import { getAnimeCalendar, getBgmHotAnimeData } from '@/api/anime_data'
+import { getPixivRank, downloadPixivImg } from '@/api/pixiv'
+import { imagePageGet } from '@/api/pictures'
 import { View, Postcard, ArrowRightBold, ArrowLeftBold } from '@element-plus/icons-vue'
-import moment from 'moment'
+import dayjs from 'dayjs'
 import type { TabsPaneContext } from 'element-plus'
+
+import starRate from '@/components/satrRate/index.vue'
+
+const { VITE_IMG_PATH } = import.meta.env
 
 const numValue = ref()
 
@@ -274,6 +314,8 @@ const handleClick = (tab: TabsPaneContext, event: Event) => {
 }
 
 const animeCalendarData = ref()
+const hotAnimeData = ref()
+const pixivRankData = ref()
 
 const numberFormat = (val: any) => {
   let numValue = '0'
@@ -291,13 +333,46 @@ const numberFormat = (val: any) => {
 
 const animeCalendar = async () => {
   const { data } = await getAnimeCalendar()
-  console.log(data)
   animeCalendarData.value = data
+}
+
+const getHotAnimeData = async () => {
+  const { data } = await getBgmHotAnimeData()
+  hotAnimeData.value = data
+}
+
+const picturesData = ref()
+const getPicturesData = async () => {
+  const { data } = await imagePageGet({
+    pageSize: 10,
+    pageCount: 1
+  })
+  picturesData.value = data
+  console.log(data)
+}
+
+const pixivRank = async () => {
+  const { data } = await getPixivRank()
+  pixivRankData.value = data
+}
+
+const downloadPixivImage = async (data: any) => {
+  const res: any = await downloadPixivImg(data)
+  const blob = new Blob([res])
+  const url = window.URL.createObjectURL(blob)
+  const a = document.createElement('a')
+  a.href = url
+  a.download = `${data.title}.jpg`
+  a.click()
+  window.URL.revokeObjectURL(url)
 }
 
 const init = async () => {
   await animeCalendar()
-  activeName.value = moment().format('ddd')
+  await getHotAnimeData()
+  await getPicturesData()
+  await pixivRank()
+  activeName.value = dayjs().format('ddd')
 }
 
 const right = ref('0px')
@@ -310,8 +385,8 @@ const prevAnime = () => {
   right.value = `${parseInt(right.value) - 870}px`
 }
 
-onMounted(() => {
-  init()
+onMounted(async () => {
+  await init()
   numValue.value = numberFormat(2333)
 })
 </script>
@@ -374,11 +449,12 @@ onMounted(() => {
   box-sizing: border-box;
   padding: 5px;
   position: relative;
+  margin-top: 5px;
   div {
     // margin-top: 90px;
     height: 100%;
     width: 100%;
-    color: #fdfdfd;
+    // color: #f65454;
     span {
       margin-left: 0;
       display: block;
@@ -390,6 +466,10 @@ onMounted(() => {
       -webkit-line-clamp: 2;
       margin-left: 18px;
       margin-top: 100px;
+      line-height: 20px;
+      font-size: 24px;
+      font-weight: bold;
+      font-style: italic;
     }
     position: absolute;
     left: -10px;
@@ -408,6 +488,7 @@ onMounted(() => {
   }
 }
 #pic_befcolor_1 {
+  margin-top: 20px;
   div::before {
     background-color: #5d9ff4;
     font-style: italic;

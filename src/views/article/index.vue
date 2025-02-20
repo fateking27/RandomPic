@@ -45,7 +45,7 @@
       </div>
     </div>
     <div
-      class="w-[50vw] border border-dashed border-t-0 border-b-0 border-b-gray-600 flex flex-wrap justify-center m-[auto]"
+      class="max-sm:w-[100vw] max-md:w-[80vw] max-lg:w-[70vw] max-xl:w-[60vw] w-[50vw] border border-dashed border-t-0 border-b-0 border-b-gray-600 flex flex-wrap justify-center m-[auto]"
     >
       <div class="p-[10px] w-[100%]" v-for="item in articles" v-html="item"></div>
     </div>

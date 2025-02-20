@@ -43,6 +43,7 @@ export default ({ command, mode }: ConfigEnv): UserConfigExport => {
     server: {
       // 端口号
       port: Number(VITE_PORT),
+      //@ts-ignore
       host: '0.0.0.0',
       proxy: {}
     }
