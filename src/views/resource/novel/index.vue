@@ -123,25 +123,18 @@ const getNovelListData = async () => {
   if (res.code === 403) {
     await wenku8Login()
     await getNovelListData()
+    return
   }
   novelList.value = res.data.rows.splice(0, 16)
 }
 
 const getNovelHotAnimeData = async () => {
   const res: any = await getNovelHotAnime()
-  if (res.code === 403) {
-    await wenku8Login()
-    await getNovelHotAnimeData()
-  }
   novelHotAnime.value = res.data
 }
 
 const getNovelRankingData = async () => {
   const res: any = await getNovelRanking()
-  if (res.code === 403) {
-    await wenku8Login()
-    await getNovelRanking()
-  }
   novelRankingData.value = res.data
 }
 

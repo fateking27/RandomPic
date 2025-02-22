@@ -111,7 +111,12 @@
             ></span>
           </div>
         </div>
-        <el-image class="" style="width: 100%; height: 100%" :src="item.url" fit="cover">
+        <el-image
+          class=""
+          style="width: 100%; height: 100%"
+          :src="item.thumb ? item.thumb : item.url"
+          fit="cover"
+        >
           <template #placeholder>
             <div
               class="image-slot flex justify-center items-center h-[100%] bg-[#ffffff] overflow-hidden"
@@ -152,6 +157,7 @@ interface Picture {
   id: number
   url: string
   size: string
+  thumb: string
   // Add other properties if needed
 }
 

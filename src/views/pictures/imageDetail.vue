@@ -1,22 +1,15 @@
 <template>
   <div class="flex justify-between">
-    <div
-      @click=""
-      :class="[
-        'left_container',
-        'w-[300px] h-[800px] bg-opacity-50 bg-white box-border p-[10px] rounded-lg'
-      ]"
-    >
+    <div :class="[
+      'left_container',
+      'w-[300px] h-[800px] bg-opacity-50 bg-white box-border p-[10px] rounded-lg'
+    ]">
       <div class="text-center text-3xl text-[#333] italic">
         <span>{{ imageDetail?.size }}</span>
       </div>
-      <div v-loading="loading" class="flex justify-center p-[10px]">
-        <div
-          class="w-[50px] h-[20px] hover:scale-125 hover:shadow-md transition-all duration-200"
-          v-for="color in colorPalette"
-          :key="color"
-          :style="{ background: color }"
-        ></div>
+      <div class="flex justify-center p-[10px]">
+        <div class="w-[50px] h-[20px] hover:scale-125 hover:shadow-md transition-all duration-200"
+          v-for="color in theme_colors?.split('/')" :key="color" :style="{ background: color }"></div>
       </div>
       <el-divider />
       <div>
@@ -24,20 +17,17 @@
           <span class="text-[#999898] font-bold">标签</span>
         </div>
         <div class="p-[10px] pl-0">
-          <el-input v-model="tagInput" clear placeholder="Add Tag..."
-            ><template #append>
+          <el-input v-model="tagInput" clear placeholder="Add Tag..."><template #append>
               <div @click="addTag" class="cursor-pointer hover:text-[#595757] leading-3">
-                <el-icon><Plus /></el-icon>
-              </div> </template
-          ></el-input>
+                <el-icon>
+                  <Plus />
+                </el-icon>
+              </div>
+            </template></el-input>
         </div>
         <div>
-          <el-tag
-            class="cursor-pointer hover:opacity-70"
-            closable
-            v-for="(tag, index) in imageDetail?.tags?.split(',')"
-            :key="index"
-            style="
+          <el-tag class="cursor-pointer hover:opacity-70" closable v-for="(tag, index) in imageDetail?.tags?.split(',')"
+            :key="index" style="
               margin: 0 5px;
               background-color: #d5e4ef;
               font-weight: bold;
@@ -45,9 +35,7 @@
               color: #3289c2;
               margin-left: 0;
               margin-bottom: 10px;
-            "
-            >{{ tag }}</el-tag
-          >
+            ">{{ tag }}</el-tag>
         </div>
       </div>
       <el-divider />
@@ -61,10 +49,8 @@
             <el-avatar class="ml-[10px] mr-[10px]" shape="square" size="" :src="imageDetail.url" />
             <div>
               <div class="text-[11px] text-[#3289c2]">???</div>
-              <div
-                class="text-[11px] text-[#3289c2]"
-                :title="dayjs(imageDetail.uploadTime).format('YYYY-MM-DD HH:mm:ss')"
-              >
+              <div class="text-[11px] text-[#3289c2]"
+                :title="dayjs(imageDetail.uploadTime).format('YYYY-MM-DD HH:mm:ss')">
                 {{ dayjs(imageDetail.uploadTime).fromNow() }}
               </div>
             </div>
@@ -78,58 +64,47 @@
           <div class="mt-[15px] flex items-center">
             <div class="text-[13px] text-[#999898] font-bold w-[60px] text-right">Size</div>
             <div class="ml-[10px] text-[12px] text-[#3289c2] font-bold">
-              {{ imageDetail.fileSize }}
+              {{
+                parseInt(imageDetail.file_size).toString().length <= 6 ? (parseInt(imageDetail.file_size) /
+                  1024).toFixed(2) + 'KB' : (parseInt(imageDetail.file_size) / (1024 * 1024)).toFixed(2) + 'MB' }} </div>
             </div>
-          </div>
-          <div class="mt-[15px] flex items-center">
-            <div class="text-[13px] text-[#999898] font-bold w-[60px] text-right">Views</div>
-            <div class="ml-[10px] text-[12px] text-[#3289c2] font-bold">
-              {{ '???' }}
+            <div class="mt-[15px] flex items-center">
+              <div class="text-[13px] text-[#999898] font-bold w-[60px] text-right">Views</div>
+              <div class="ml-[10px] text-[12px] text-[#3289c2] font-bold">
+                {{ '???' }}
+              </div>
             </div>
-          </div>
-          <div class="mt-[15px] flex items-center">
-            <div class="text-[13px] text-[#999898] font-bold w-[60px] text-right">Favorites</div>
-            <div class="ml-[10px] text-[12px] text-[#3289c2] font-bold">
-              {{ '???' }}
+            <div class="mt-[15px] flex items-center">
+              <div class="text-[13px] text-[#999898] font-bold w-[60px] text-right">Favorites</div>
+              <div class="ml-[10px] text-[12px] text-[#3289c2] font-bold">
+                {{ '???' }}
+              </div>
             </div>
           </div>
         </div>
-      </div>
-      <el-divider />
-      <div>
+        <el-divider />
         <div>
-          <span class="text-[#999898] font-bold">操作</span>
-        </div>
-        <div class="">
-          <el-button type="primary" class="w-[100%] mt-[10px]" @click="fullScreen">
-            全屏查看
-          </el-button>
-        </div>
-        <div class="">
-          <el-button
-            type="primary"
-            class="w-[100%] mt-[10px]"
-            @click="downloadImage(imageDetail.url)"
-          >
-            下载图片
-          </el-button>
+          <div>
+            <span class="text-[#999898] font-bold">操作</span>
+          </div>
+          <div class="">
+            <el-button type="primary" class="w-[100%] mt-[10px]" @click="fullScreen">
+              全屏查看
+            </el-button>
+          </div>
+          <div class="">
+            <el-button type="primary" class="w-[100%] mt-[10px]" @click="downloadImage(imageDetail.url)">
+              下载图片
+            </el-button>
+          </div>
         </div>
       </div>
-    </div>
-    <div
-      :class="[
+      <div :class="[
         'w-[870px] h-[800px] flex items-center justify-center bg-opacity-50 bg-[#fff] box-border p-[10px] rounded-lg'
-      ]"
-    >
-      <img
-        ref="imageRef"
-        style="max-width: 100%; max-height: 100%"
-        fit="contain"
-        src=""
-        crossorigin=""
-      />
+      ]">
+        <img ref="imageRef" style="max-width: 100%; max-height: 100%" :src="imageDetail.url" />
+      </div>
     </div>
-  </div>
 </template>
 
 <script setup lang="ts">
@@ -151,43 +126,45 @@ const imageDetail = ref<any>({})
 const imageRef = ref()
 const colorPalette = ref([])
 const loading = ref(true)
+const theme_colors = ref<string>('')
 const tagInput = ref<string>()
 
 const getImgDetail = async () => {
   const { data } = await getImgById({ id })
   imageDetail.value = data
+  theme_colors.value = data.theme_colors
   //获取图片存储大小
-  try {
-    const imgRes = await fetch(imageDetail.value.url, { method: 'HEAD' })
-    const size = imgRes.headers.get('content-length')
-    if (size) {
-      const bytes = parseInt(size)
-      imageDetail.value.fileSize =
-        bytes.toString().length <= 6
-          ? (bytes / 1024).toFixed(2) + 'KB'
-          : (bytes / (1024 * 1024)).toFixed(2) + 'MB'
-    }
-  } catch (error) {
-    const odImgRes = await axios.get(
-      import.meta.env.VITE_API_PATH + '/od-imagefun?link=' + data.url
-    )
-    const bytes = parseInt(odImgRes.headers['content-length'])
-    imageDetail.value.fileSize =
-      bytes.toString().length <= 6
-        ? (bytes / 1024).toFixed(2) + 'KB'
-        : (bytes / (1024 * 1024)).toFixed(2) + 'MB'
-  }
+  // try {
+  //   const imgRes = await fetch(imageDetail.value.url, { method: 'HEAD' })
+  //   const size = imgRes.headers.get('content-length')
+  //   if (size) {
+  //     const bytes = parseInt(size)
+  //     imageDetail.value.fileSize =
+  //       bytes.toString().length <= 6
+  //         ? (bytes / 1024).toFixed(2) + 'KB'
+  //         : (bytes / (1024 * 1024)).toFixed(2) + 'MB'
+  //   }
+  // } catch (error) {
+  //   const odImgRes = await axios.get(
+  //     import.meta.env.VITE_API_PATH + '/od-imagefun?link=' + data.url
+  //   )
+  //   const bytes = parseInt(odImgRes.headers['content-length'])
+  //   imageDetail.value.fileSize =
+  //     bytes.toString().length <= 6
+  //       ? (bytes / 1024).toFixed(2) + 'KB'
+  //       : (bytes / (1024 * 1024)).toFixed(2) + 'MB'
+  // }
 }
 
 //获取图片主题色
-const getColorPalette = async () => {
-  const colorThief = new ColorThief()
-  const img = imageRef.value
-  if (!img) return
-  const palette = await colorThief.getPalette(img, 5)
-  colorPalette.value = palette.map(([r, g, b]: [number, number, number]) => `rgb(${r}, ${g}, ${b})`)
-  console.log(colorPalette.value)
-}
+// const getColorPalette = async () => {
+//   const colorThief = new ColorThief()
+//   const img = imageRef.value
+//   if (!img) return
+//   const palette = await colorThief.getPalette(img, 5)
+//   colorPalette.value = palette.map(([r, g, b]: [number, number, number]) => `rgb(${r}, ${g}, ${b})`)
+//   console.log(colorPalette.value)
+// }
 
 const addTag = async () => {
   if (!tagInput.value) return
@@ -247,18 +224,17 @@ const fullScreen = () => {
 
 onMounted(async () => {
   await getImgDetail()
-  imageRef.value.src = imageDetail.value.url
 
-  imageRef.value.onerror = async () => {
-    if (!imageDetail.value.url) return
-    imageRef.value.src =
-      import.meta.env.VITE_API_PATH + '/od-imagefun?link=' + imageDetail.value.url
-  }
+  // imageRef.value.onerror = async () => {
+  //   if (!imageDetail.value.url) return
+  //   imageRef.value.src =
+  //     import.meta.env.VITE_API_PATH + '/od-imagefun?link=' + imageDetail.value.url
+  // }
 
-  imageRef.value.onload = async () => {
-    await getColorPalette()
-    loading.value = false
-  }
+  // imageRef.value.onload = async () => {
+  //   await getColorPalette()
+  //   loading.value = false
+  // }
 })
 </script>
 
@@ -268,18 +244,22 @@ onMounted(async () => {
   width: 5px;
   background-color: rgb(235, 235, 235, 0);
 }
+
 ::-webkit-scrollbar-thumb {
   background-color: rgb(191, 191, 191, 0);
   border-radius: 5px;
 }
+
 .left_container {
   overflow-y: auto;
   scrollbar-gutter: stable;
+
   &:hover {
     &::-webkit-scrollbar {
       width: 5px;
       background-color: rgb(235, 235, 235);
     }
+
     &::-webkit-scrollbar-thumb {
       background-color: #bfbfbf;
       border-radius: 5px;
