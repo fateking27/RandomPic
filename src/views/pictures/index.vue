@@ -95,7 +95,7 @@
         class="picture-item relative h-[150px] w-[270px] leading-[150px] text-center m-[10px] rounded-md overflow-hidden cursor-pointer"
         v-for="item in dataList"
         :key="item.id"
-        @click="() => $router.push({ path: '/imagedetail', query: { id: item.id } })"
+        @click="toImageDetail(item.id)"
       >
         <div
           class="pic-size bg-[#000000] absolute z-10 bottom-[-35px] h-[35px] w-[100%] bg-opacity-40 flex justify-between items-center text-white"
@@ -152,6 +152,8 @@ import { ref, reactive, onMounted } from 'vue'
 import { imagePageGet } from '@/api/pictures'
 import imgLoading from '@/components/imgLoading/index.vue'
 import { Upload, Sort, TrophyBase, Clock } from '@element-plus/icons-vue'
+import {} from 'vue-router'
+import { useRouter } from 'vue-router'
 
 interface Picture {
   id: number
@@ -170,6 +172,11 @@ const pagination = reactive({
   pageCount: 1,
   total: 0
 })
+
+const router = useRouter()
+const toImageDetail = (id: number) => {
+  window.open(router.resolve({ path: '/imagedetail', query: { id } }).href, '_blank')
+}
 
 const sortMark = ref('')
 

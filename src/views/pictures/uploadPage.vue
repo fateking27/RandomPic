@@ -62,7 +62,7 @@
             </div>
           </div>
         </div>
-        <img style="width: 100%;" :src="item.url"></img>
+        <el-image style="width: 100%;height: 100%;" fit="cover" :src="item.url"></el-image>
       </div>
     </div>
   </div>
@@ -72,7 +72,7 @@
 import { ref } from 'vue'
 import { Check, CloseBold } from '@element-plus/icons-vue'
 
-import { odUploadFile, easyUpload } from '@/api/pictures'
+import { odUploadFile, easyUpload, editImg } from '@/api/pictures'
 
 import {
   type UploadInstance,
@@ -84,6 +84,7 @@ import {
 import axios from 'axios'
 // @ts-ignore //取消引入报错
 import ColorThief from 'colorthief'
+import { fa } from 'element-plus/es/locale/index.mjs'
 
 const uploadRef = ref<UploadInstance>()
 
@@ -130,49 +131,53 @@ const oneDriveUpload = async (data: any) => {
   const formData = new FormData()
   formData.append('file', data.file)
 
-  for (let i = 0; i < fileList.value.length; i++) {
-    if (fileList.value[i].uid == data.file.uid) {
-      fileList.value[i].loading = true
-      color = await getColorPalette(fileList.value[i])
-      formData.append('theme_colors', color)
+  fileList.value.forEach(async (item: any) => {
+    if (item.uid == data.file.uid) {
+      item.loading = true
+      // color = await getColorPalette(item)
+      formData.append('theme_colors', item.theme_colors)
+      const res: any = await easyUpload(formData)
+      // console.log(res)
+      if (res.code === 200) {
+        fileList.value.forEach(
+          (item: { url: any; imgStatus: string; uid: string; loading: boolean }) => {
+            if (item.uid == data.file.uid) {
+              item.imgStatus = 'success'
+              item.loading = false
+            }
+          }
+        )
+      } else {
+        fileList.value.forEach((item: any) => {
+          if (item.uid == data.file.uid) {
+            item.imgStatus = 'fail'
+            item.message = res.message
+            item.loading = false
+          }
+        })
+      }
     }
-  }
+  })
 
-  console.log(color)
-
-  const res: any = await easyUpload(formData)
-  // console.log(res)
-  if (res.code === 200) {
-    fileList.value.forEach(
-      (item: { url: any; imgStatus: string; uid: string; loading: boolean }) => {
-        if (item.uid == data.file.uid) {
-          item.imgStatus = 'success'
-          item.loading = false
-        }
-      }
-    )
-  } else {
-    fileList.value.forEach((item: any) => {
-      if (item.uid == data.file.uid) {
-        item.imgStatus = 'fail'
-        item.message = res.message
-        item.loading = false
-      }
-    })
-  }
 }
 
 const onImage = (item: any) => {
   console.log(item)
 }
 
-const beforeAvatarUpload: UploadProps['beforeUpload'] = (rawFile) => {
+const beforeAvatarUpload: UploadProps['beforeUpload'] = async (rawFile) => {
   if (rawFile.type.split('/')[0] !== 'image') {
     ElMessage.error('请上传图片')
     return false
   } else if (rawFile.size / 1024 / 1024 > 20) {
-    ElMessage.error('图片大小不能大于20MB！')
+    ElMessage.error('上传的图片不能大于20MB！')
     return false
+  }
+  for (let i = 0; i < fileList.value.length; i++) {
+    if (fileList.value[i].uid === rawFile.uid) {
+      fileList.value[i].theme_colors = await getColorPalette(fileList.value[i])
+      // break
+    }
   }
   return true
 }

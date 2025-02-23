@@ -5,3 +5,7 @@ export const getRandomImg = (data?: object) => {
     params: data
   })
 }
+
+export const editRandomImg = (data: object) => {
+  return axios.post('/img/edit', data)
+}

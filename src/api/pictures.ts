@@ -37,3 +37,7 @@ export const easyUpload = (file: any) => {
     }
   })
 }
+
+export const editImg = (data: object) => {
+  return axios.post('/img/edit', data)
+}
