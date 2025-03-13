@@ -280,7 +280,12 @@
               :data-num="'TOP ' + item.rank"
               class="truncate before:content-[attr(data-num)] before:bg-slate-300 before:text-[#fff] before:absolute before:h-[20px] before:leading-[20px] before:rounded-tr-lg before:rounded-br-lg before:text-center before:text-[11px] before:font-style-[italic] before:w-[40px] before:left-[-10px]"
             >
-              <span class="ml-[35px] transition-all ease-in hover:text-[#ed7b7b]">
+              <span
+                :class="[
+                  'ml-[35px] transition-all ease-in hover:text-[#ed7b7b] cursor-pointer',
+                  item.rank === 1 ? 'text-[#fff]' : ''
+                ]"
+              >
                 {{ item.title }}
               </span>
             </div>
@@ -368,10 +373,10 @@ const downloadPixivImage = async (data: any) => {
 }
 
 const init = async () => {
-  await animeCalendar()
-  await getHotAnimeData()
-  await getPicturesData()
-  await pixivRank()
+  animeCalendar()
+  getHotAnimeData()
+  getPicturesData()
+  pixivRank()
   activeName.value = dayjs().format('ddd')
 }
 

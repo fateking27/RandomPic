@@ -44,7 +44,7 @@ export default ({ command, mode }: ConfigEnv): UserConfigExport => {
       // 端口号
       port: Number(VITE_PORT),
       //@ts-ignore
-      host: '0.0.0.0',
+      host: ['0.0.0.0'],
       proxy: {}
     }
   }

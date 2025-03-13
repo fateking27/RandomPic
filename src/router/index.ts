@@ -1,6 +1,7 @@
 import { createRouter, createWebHashHistory } from 'vue-router'
 import Layout from '@/components/layout/index.vue'
 import { KeepAlive } from 'vue'
+import { ro } from 'element-plus/es/locales.mjs'
 
 const router = createRouter({
   history: createWebHashHistory(import.meta.env.BASE_URL),
@@ -68,13 +69,34 @@ const router = createRouter({
           meta: {
             title: '轻小说资源'
           }
+        },
+        {
+          path: 'resource/novel/detail/:id',
+          name: 'ResourceNovelDetail',
+          component: () => import('@/views/resource/novel/detail.vue'),
+          meta: {
+            title: '轻小说详情',
+            KeepAlive: true
+          }
+        },
+        {
+          path: 'resource/novel/chapter/:id',
+          name: 'ResourceNovelChapter',
+          component: () => import('@/views/resource/novel/chapter.vue'),
+          meta: {
+            title: '轻小说章节',
+            KeepAlive: true
+          }
         }
       ]
     },
     {
       path: '/article',
-      name: 'article',
-      component: () => import('@/views/article/index.vue')
+      name: 'Article',
+      component: () => import('@/views/article/index.vue'),
+      meta: {
+        title: '文章'
+      }
     },
     {
       path: '/randomimg',
@@ -88,5 +110,7 @@ router.beforeEach((to, from, next) => {
   document.title = 'ANIMEX | ' + to.meta.title || 'ANIMEX'
   next()
 })
-
+router.afterEach((to, from, failure) => {
+  window.scrollTo(0, 0)
+})
 export default router

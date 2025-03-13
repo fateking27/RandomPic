@@ -136,6 +136,7 @@ const oneDriveUpload = async (data: any) => {
       item.loading = true
       // color = await getColorPalette(item)
       formData.append('theme_colors', item.theme_colors)
+      
       const res: any = await easyUpload(formData)
       // console.log(res)
       if (res.code === 200) {
@@ -176,7 +177,7 @@ const beforeAvatarUpload: UploadProps['beforeUpload'] = async (rawFile) => {
   for (let i = 0; i < fileList.value.length; i++) {
     if (fileList.value[i].uid === rawFile.uid) {
       fileList.value[i].theme_colors = await getColorPalette(fileList.value[i])
-      // break
+      break
     }
   }
   return true

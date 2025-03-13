@@ -1,15 +1,21 @@
 <template>
   <div class="flex justify-between">
-    <div :class="[
-      'left_container',
-      'w-[300px] h-[800px] bg-opacity-50 bg-white box-border p-[10px] rounded-lg'
-    ]">
+    <div
+      :class="[
+        'left_container',
+        'w-[300px] h-[800px] bg-opacity-50 bg-white box-border p-[10px] rounded-lg'
+      ]"
+    >
       <div class="text-center text-3xl text-[#333] italic">
         <span>{{ imageDetail?.size }}</span>
       </div>
       <div class="flex justify-center p-[10px]">
-        <div class="w-[50px] h-[20px] hover:scale-125 hover:shadow-md transition-all duration-200"
-          v-for="color in theme_colors?.split('/')" :key="color" :style="{ background: color }"></div>
+        <div
+          class="w-[50px] h-[20px] hover:scale-125 hover:shadow-md transition-all duration-200"
+          v-for="color in theme_colors?.split('/')"
+          :key="color"
+          :style="{ background: color }"
+        ></div>
       </div>
       <el-divider />
       <div>
@@ -17,17 +23,22 @@
           <span class="text-[#999898] font-bold">标签</span>
         </div>
         <div class="p-[10px] pl-0">
-          <el-input v-model="tagInput" clear placeholder="Add Tag..."><template #append>
+          <el-input v-model="tagInput" clear placeholder="Add Tag..."
+            ><template #append>
               <div @click="addTag" class="cursor-pointer hover:text-[#595757] leading-3">
                 <el-icon>
                   <Plus />
                 </el-icon>
-              </div>
-            </template></el-input>
+              </div> </template
+          ></el-input>
         </div>
         <div>
-          <el-tag class="cursor-pointer hover:opacity-70" closable v-for="(tag, index) in imageDetail?.tags?.split(',')"
-            :key="index" style="
+          <el-tag
+            class="cursor-pointer hover:opacity-70"
+            closable
+            v-for="(tag, index) in imageDetail?.tags?.split(',')"
+            :key="index"
+            style="
               margin: 0 5px;
               background-color: #d5e4ef;
               font-weight: bold;
@@ -35,7 +46,9 @@
               color: #3289c2;
               margin-left: 0;
               margin-bottom: 10px;
-            ">{{ tag }}</el-tag>
+            "
+            >{{ tag }}</el-tag
+          >
         </div>
       </div>
       <el-divider />
@@ -49,8 +62,10 @@
             <el-avatar class="ml-[10px] mr-[10px]" shape="square" size="" :src="imageDetail.url" />
             <div>
               <div class="text-[11px] text-[#3289c2]">???</div>
-              <div class="text-[11px] text-[#3289c2]"
-                :title="dayjs(imageDetail.uploadTime).format('YYYY-MM-DD HH:mm:ss')">
+              <div
+                class="text-[11px] text-[#3289c2]"
+                :title="dayjs(imageDetail.uploadTime).format('YYYY-MM-DD HH:mm:ss')"
+              >
                 {{ dayjs(imageDetail.uploadTime).fromNow() }}
               </div>
             </div>
@@ -65,46 +80,57 @@
             <div class="text-[13px] text-[#999898] font-bold w-[60px] text-right">Size</div>
             <div class="ml-[10px] text-[12px] text-[#3289c2] font-bold">
               {{
-                parseInt(imageDetail.file_size).toString().length <= 6 ? (parseInt(imageDetail.file_size) /
-                  1024).toFixed(2) + 'KB' : (parseInt(imageDetail.file_size) / (1024 * 1024)).toFixed(2) + 'MB' }} </div>
-            </div>
-            <div class="mt-[15px] flex items-center">
-              <div class="text-[13px] text-[#999898] font-bold w-[60px] text-right">Views</div>
-              <div class="ml-[10px] text-[12px] text-[#3289c2] font-bold">
-                {{ '???' }}
-              </div>
-            </div>
-            <div class="mt-[15px] flex items-center">
-              <div class="text-[13px] text-[#999898] font-bold w-[60px] text-right">Favorites</div>
-              <div class="ml-[10px] text-[12px] text-[#3289c2] font-bold">
-                {{ '???' }}
-              </div>
+                parseInt(imageDetail.file_size).toString().length <= 6
+                  ? (parseInt(imageDetail.file_size) / 1024).toFixed(2) + 'KB'
+                  : (parseInt(imageDetail.file_size) / (1024 * 1024)).toFixed(2) + 'MB'
+              }}
             </div>
           </div>
-        </div>
-        <el-divider />
-        <div>
-          <div>
-            <span class="text-[#999898] font-bold">操作</span>
+          <div class="mt-[15px] flex items-center">
+            <div class="text-[13px] text-[#999898] font-bold w-[60px] text-right">Views</div>
+            <div class="ml-[10px] text-[12px] text-[#3289c2] font-bold">
+              {{ '???' }}
+            </div>
           </div>
-          <div class="">
-            <el-button type="primary" class="w-[100%] mt-[10px]" @click="fullScreen">
-              全屏查看
-            </el-button>
-          </div>
-          <div class="">
-            <el-button type="primary" class="w-[100%] mt-[10px]" @click="downloadImage(imageDetail.url)">
-              下载图片
-            </el-button>
+          <div class="mt-[15px] flex items-center">
+            <div class="text-[13px] text-[#999898] font-bold w-[60px] text-right">Favorites</div>
+            <div class="ml-[10px] text-[12px] text-[#3289c2] font-bold">
+              {{ '???' }}
+            </div>
           </div>
         </div>
       </div>
-      <div :class="[
-        'w-[870px] h-[800px] flex items-center justify-center bg-opacity-50 bg-[#fff] box-border p-[10px] rounded-lg'
-      ]">
-        <img ref="imageRef" style="max-width: 100%; max-height: 100%" :src="imageDetail.url" />
+      <el-divider />
+      <div>
+        <div>
+          <span class="text-[#999898] font-bold">操作</span>
+        </div>
+        <div class="">
+          <el-button type="primary" class="w-[100%] mt-[10px]" @click="fullScreen">
+            全屏查看
+          </el-button>
+        </div>
+        <div class="">
+          <el-button
+            v-loading="imgDownloading"
+            element-loading-text="下载中..."
+            type="primary"
+            class="w-[100%] mt-[10px]"
+            @click="downloadImage(imageDetail.url)"
+          >
+            下载图片
+          </el-button>
+        </div>
       </div>
     </div>
+    <div
+      :class="[
+        'w-[870px] h-[800px] flex items-center justify-center bg-opacity-50 bg-[#fff] box-border p-[10px] rounded-lg'
+      ]"
+    >
+      <img ref="imageRef" style="max-width: 100%; max-height: 100%" :src="imageDetail.url" />
+    </div>
+  </div>
 </template>
 
 <script setup lang="ts">
@@ -174,20 +200,26 @@ const addTag = async () => {
   await getImgDetail()
 }
 
+const imgDownloading = ref(false)
+
 const downloadImage = async (imgUrl: string) => {
   let imgRes = undefined
   let imgType = ''
 
   try {
+    // imgDownloading.value = true
     imgRes = await fetch(imgUrl, { method: 'GET' })
+    // imgDownloading.value = false
     const contentType = imgRes.headers.get('content-type')
     imgType = contentType ? contentType.split('/')[1] : 'jpeg'
   } catch (error) {
     imgRes = await fetch(import.meta.env.VITE_API_PATH + '/od-imagefun?link=' + imgUrl, {
       method: 'GET'
     })
+    // imgDownloading.value = false
     const contentType = imgRes.headers.get('content-type')
     imgType = contentType ? contentType.split('/')[1] : 'jpeg'
+    console.log(contentType)
   }
 
   //生成随机图片名

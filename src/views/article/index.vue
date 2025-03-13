@@ -11,6 +11,13 @@
   }
 }
 
+#content {
+  a {
+    color: #000;
+    text-decoration: none;
+  }
+}
+
 #adv300 {
   display: none;
 }
@@ -32,43 +39,61 @@
     <div class="loader"></div>
   </div>
   <div v-else ref="articleRef" id="article" class="absolute w-[100%] min-h-[100vh]">
-    <div class="h-[40px] border border-dashed border-r-0 border-l-0 flex justify-center">
+    <div
+      class="h-[40px] border border-dashed border-r-0 border-l-0 flex justify-center fixed top-0 w-[100%] bg-white"
+    >
       <div class="h-[100%] flex items-center">
-        <el-link type="primary" :underline="false">添加书签</el-link>
+        <el-link type="primary" :underline="false" @click="saveScrollPosition">添加书签</el-link>
+        <el-link type="primary" :underline="false" @click="restoreScrollPosition"
+          >跳转到书签位置</el-link
+        >
       </div>
       <div class="h-[100%] flex items-center">
-        <el-link type="primary" :underline="false">上一页</el-link>
-        <el-link type="primary" :underline="false">下一页</el-link>
+        <el-link type="primary" :underline="false" @click="prevChapter">上一页</el-link>
+        <el-link type="primary" :underline="false" @click="nextChapter">下一页</el-link>
       </div>
       <div class="h-[100%] flex items-center">
-        <el-link type="primary" :underline="false">返回目录</el-link>
+        <el-link type="primary" :underline="false" @click="backPage">返回目录</el-link>
       </div>
     </div>
     <div
-      class="max-sm:w-[100vw] max-md:w-[80vw] max-lg:w-[70vw] max-xl:w-[60vw] w-[50vw] border border-dashed border-t-0 border-b-0 border-b-gray-600 flex flex-wrap justify-center m-[auto]"
+      class="max-sm:w-[100vw] mt-[45px] max-md:w-[80vw] max-lg:w-[70vw] max-xl:w-[60vw] w-[50vw] border border-dashed border-t-0 border-b-0 border-b-gray-600 flex flex-wrap justify-center m-[auto]"
     >
-      <div class="p-[10px] w-[100%]" v-for="item in articles" v-html="item"></div>
+      <div
+        id="novel_content"
+        class="p-[10px] w-[100%]"
+        v-for="item in articles"
+        v-html="item"
+      ></div>
     </div>
     <div class="h-[40px] border border-dashed border-r-0 border-l-0 border-b-0 flex justify-center">
-      <div class="h-[100%] flex items-center">
-        <el-link type="primary" :underline="false">添加书签</el-link>
+      <!-- <div class="h-[100%] flex items-center">
+        <el-link type="primary" :underline="false" @click="saveScrollPosition">添加书签</el-link>
       </div>
       <div class="h-[100%] flex items-center">
-        <el-link type="primary" :underline="false">上一页</el-link>
-        <el-link type="primary" :underline="false">下一页</el-link>
+        <el-link type="primary" :underline="false" @click="prevChapter">上一页</el-link>
+        <el-link type="primary" :underline="false" @click="nextChapter">下一页</el-link>
       </div>
       <div class="h-[100%] flex items-center">
-        <el-link type="primary" :underline="false">返回目录</el-link>
-      </div>
+        <el-link type="primary" :underline="false" @click="backPage">返回目录</el-link>
+      </div> -->
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
 import { onMounted, ref } from 'vue'
+import { useRouter } from 'vue-router'
+const router = useRouter()
+
 import { getArticle } from '@/api/article'
+// import { title } from 'process'
+
+const { VITE_API_PATH } = import.meta.env
+
 const articleRef = ref()
 const articleContent = ref({
+  id: 0,
   title: '',
   content: []
 })
@@ -76,7 +101,7 @@ const articles = ref([])
 const getContent = async () => {
   let artArray = undefined
   const { data } = await getArticle({
-    article_id_string: '3/3057/125417'
+    article_id_string: router.currentRoute.value.query.article_id_string
   })
   articleContent.value = data
   artArray = data.content.split('<br>').map((item: string) => {
@@ -88,11 +113,140 @@ const getContent = async () => {
   })
   articleContent.value.content = artArray.filter((item: string) => item)
   articles.value = articleContent.value.content
-  console.log(articles.value)
+
+  document.title = articleContent.value.title
+}
+
+const nextChapter = () => {
+  JSON.parse(localStorage.getItem('chapters') || '[]').forEach((item: any, index: number) => {
+    if (item.id === router.currentRoute.value.query.article_id_string?.toString().split('/')[2]) {
+      if (index + 1 < JSON.parse(localStorage.getItem('chapters') || '[]').length) {
+        const novel_id =
+          router.currentRoute.value.query.article_id_string?.toString().split('/')[1] || ''
+        const id = JSON.parse(localStorage.getItem('chapters') || '[]')[index + 1].id
+        router
+          .push({
+            path: '/article',
+            query: {
+              article_id_string:
+                novel_id.length < 4
+                  ? '0'
+                  : novel_id.toString().split('')[0] + '/' + novel_id + '/' + id
+            }
+          })
+          .then(() => {
+            getContent().then(() => {
+              document.querySelectorAll('#novel_content img').forEach((item: any) => {
+                item.src = VITE_API_PATH + '/od-imagefun?link=' + item.src
+                item.style.width = '90%'
+              })
+            })
+          })
+        return
+      } else {
+        alert('已经是最后一章了')
+      }
+    }
+  })
+}
+
+const prevChapter = () => {
+  JSON.parse(localStorage.getItem('chapters') || '[]').forEach((item: any, index: number) => {
+    if (item.id === router.currentRoute.value.query.article_id_string?.toString().split('/')[2]) {
+      if (index - 1 >= 0) {
+        const novel_id =
+          router.currentRoute.value.query.article_id_string?.toString().split('/')[1] || ''
+        const id = JSON.parse(localStorage.getItem('chapters') || '[]')[index - 1].id
+        router
+          .push({
+            path: '/article',
+            query: {
+              article_id_string:
+                novel_id.length < 4
+                  ? '0'
+                  : novel_id.toString().split('')[0] + '/' + novel_id + '/' + id
+            }
+          })
+          .then(() => {
+            getContent().then(() => {
+              document.querySelectorAll('#novel_content img').forEach((item: any) => {
+                item.src = VITE_API_PATH + '/od-imagefun?link=' + item.src
+                item.style.width = '90%'
+              })
+            })
+          })
+        return
+      } else {
+        alert('已经是第一章了')
+      }
+    }
+  })
+}
+
+const backPage = () => {
+  router.push(
+    '/resource/novel/chapter/' +
+      router.currentRoute.value.query.article_id_string?.toString().split('/')[1]
+  )
+}
+
+// 记录当前滚动条位置
+const saveScrollPosition = () => {
+  if (!router.currentRoute.value.query.article_id_string) return
+
+  const scrollPosition = window.scrollY || document.documentElement.scrollTop
+  const articleId = router.currentRoute.value.query.article_id_string.toString()
+  const bookmarks = JSON.parse(localStorage.getItem('bookmarks') || '[]')
+  const oneBoolmark = bookmarks.find((item: any) => item.articleId === articleContent.value.id)
+  if (!oneBoolmark) {
+    bookmarks.push({
+      articleId: articleContent.value.id,
+      title: articleContent.value.title,
+      scrollPosition
+    })
+    localStorage.setItem(`bookmarks`, JSON.stringify(bookmarks))
+    alert('书签添加成功')
+    return
+  } else {
+    for (const item of bookmarks) {
+      if (item.articleId === articleContent.value.id) {
+        item.scrollPosition = scrollPosition
+        localStorage.setItem(`bookmarks`, JSON.stringify(bookmarks))
+        alert('书签更新成功')
+        return
+      }
+    }
+  }
+}
+
+// 恢复上次阅读位置
+const restoreScrollPosition = () => {
+  if (!router.currentRoute.value.query.article_id_string) return
+
+  // const articleId = router.currentRoute.value.query.article_id_string.toString().split('/')[2]
+  const bookmarks = JSON.parse(localStorage.getItem('bookmarks') || '[]')
+  const bookmark = bookmarks.find((item: any) => item.articleId === articleContent.value.id)
+  if (bookmark) {
+    setTimeout(() => {
+      window.scrollTo({
+        top: bookmark.scrollPosition,
+        behavior: 'auto'
+      })
+    }, 100)
+  } else {
+    alert('未找到书签')
+  }
 }
 
 onMounted(async () => {
   await getContent()
+  document.querySelectorAll('#novel_content img').forEach((item: any) => {
+    item.src = VITE_API_PATH + '/od-imagefun?link=' + item.src
+    item.style.width = '90%'
+  })
+  if (!localStorage.getItem(`bookmarks`)) {
+    localStorage.setItem(`bookmarks`, JSON.stringify([]))
+  }
 })
 </script>
 
