@@ -2,7 +2,8 @@
   <div
     v-loading="loading && !dataList.length"
     element-loading-text="Loading..."
-    class="bg-white min-h-[100vh] w-[1200px] m-auto bg-opacity-50 rounded-lg flex flex-wrap justify-center"
+    class="bg-white min-h-[100vh] w-[100vw] m-auto bg-opacity-50 rounded-lg flex flex-wrap justify-center"
+    v-infinite-scroll="infiniteScroll"
   >
     <div
       :class="[
@@ -168,7 +169,7 @@ const loading = ref(false)
 const dataList = ref<Picture[]>([])
 
 const pagination = reactive({
-  pageSize: 20,
+  pageSize: 40,
   pageCount: 1,
   total: 0
 })

@@ -4,7 +4,7 @@
       <div
         class="left w-[100%] bg-opacity-50 min-h-[180px] bg-white box-border p-[10px] rounded-lg"
       >
-        <div>轻小说列表&nbsp;<el-link>查看更多</el-link></div>
+        <div>轻小说列表&nbsp;<el-link href="#/resource/novel/novellist">查看更多</el-link></div>
         <div class="flex flex-wrap justify-between mt-[10px]">
           <div
             class="cursor-pointer w-[130px] h-[190px] flex justify-center flex-wrap box-border m-[5px]"
