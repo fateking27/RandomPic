@@ -87,7 +87,16 @@ const router = createRouter({
             title: '轻小说章节',
             KeepAlive: true
           }
-        }
+        },
+        {
+          path: 'resource/novel/novellist',
+          name: 'ResourceNovelList',
+          component: () => import('@/views/resource/novel/novelList.vue'),
+          meta: {
+            title: '轻小说列表',
+            KeepAlive: true
+          }
+        },
       ]
     },
     {

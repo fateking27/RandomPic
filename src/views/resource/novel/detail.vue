@@ -1,5 +1,5 @@
 <template>
-  <div :class="['flex', 'justify-between']">
+  <div :class="['w-[1200px] m-auto','flex', 'justify-between']">
     <div :class="['w-[870px]', 'box-border', 'rounded-lg']">
       <div
         :class="[
@@ -189,7 +189,7 @@
         </div>
       </div>
     </div>
-    <div :class="['w-[300px]', 'max-sm:hidden']">
+    <div :class="['w-[300px]']">
       <div
         :class="[
           'w-[100%]',

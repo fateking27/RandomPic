@@ -207,7 +207,7 @@ const downloadImage = async (imgUrl: string) => {
   let imgType = ''
 
   try {
-    // imgDownloading.value = true
+    imgDownloading.value = true
     imgRes = await fetch(imgUrl, { method: 'GET' })
     // imgDownloading.value = false
     const contentType = imgRes.headers.get('content-type')
@@ -216,7 +216,7 @@ const downloadImage = async (imgUrl: string) => {
     imgRes = await fetch(import.meta.env.VITE_API_PATH + '/od-imagefun?link=' + imgUrl, {
       method: 'GET'
     })
-    // imgDownloading.value = false
+    imgDownloading.value = false
     const contentType = imgRes.headers.get('content-type')
     imgType = contentType ? contentType.split('/')[1] : 'jpeg'
     console.log(contentType)

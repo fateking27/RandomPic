@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="home w-[1200px] mx-auto">
     <div class="flex justify-between">
       <div class="block text-center w-[475px]">
         <el-carousel height="250px" class="rounded-lg" motion-blur>

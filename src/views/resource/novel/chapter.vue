@@ -1,30 +1,35 @@
 <template>
-  <div class="flex flex-col items-center">
-    <h2 class="m-[auto]">{{ novelChaptersData.title }}</h2>
-    <div class="p-2">{{ novelChaptersData.author }}</div>
-  </div>
-  <div class="min-h-[calc(100vh-200px)]">
-    <div
-      :class="['w-[100%] p-1', 'flex flex-wrap', 'gap-2 mb-3']"
-      v-for="chapter in novelChaptersData.chapters"
-      :key="chapter.id"
-    >
-      <h3 class="w-full text-start mb-2 pl-2" style="border-left: 4px solid; border-color: #ff985c">
-        {{ novelChaptersData.title + '&nbsp;&nbsp;' + chapter.chapter }}
-      </h3>
+  <div class="w-[1200px] m-auto">
+    <div class="flex flex-col items-center">
+      <h2 class="m-[auto]">{{ novelChaptersData.title }}</h2>
+      <div class="p-2">{{ novelChaptersData.author }}</div>
+    </div>
+    <div class="min-h-[calc(100vh-200px)]">
       <div
-        :title="item.title"
-        v-for="item in chapter.children"
-        :key="item.id"
-        @click="handleClick(item.id, chapter.children)"
-        class="w-[24%] bg-opacity-100 min-h-10 cursor-pointer transition-all ease-in-out duration-300"
-        style="border-bottom: 1px solid; border-color: #9e9d9d"
+        :class="['w-[100%]', 'flex flex-wrap', 'gap-2 mb-3']"
+        v-for="chapter in novelChaptersData.chapters"
+        :key="chapter.id"
       >
-        <p
-          class="p-2 text-start text-sm text-nowrap truncate hover:text-[#ed7b7b] transition-all ease-in-out duration-300"
+        <h3
+          class="w-full text-start mb-2 pl-2"
+          style="border-left: 4px solid; border-color: #ff985c"
         >
-          {{ item.title }}
-        </p>
+          {{ novelChaptersData.title + '&nbsp;&nbsp;' + chapter.chapter }}
+        </h3>
+        <div
+          :title="item.title"
+          v-for="item in chapter.children"
+          :key="item.id"
+          @click="handleClick(item.id, chapter.children)"
+          class="w-[24%] bg-opacity-100 min-h-10 cursor-pointer transition-all ease-in-out duration-300"
+          style="border-bottom: 1px solid; border-color: #9e9d9d"
+        >
+          <p
+            class="p-2 text-start text-sm text-nowrap truncate hover:text-[#ed7b7b] transition-all ease-in-out duration-300"
+          >
+            {{ item.title }}
+          </p>
+        </div>
       </div>
     </div>
   </div>

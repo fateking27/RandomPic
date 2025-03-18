@@ -2,7 +2,7 @@
   <div
     v-loading="loading && !dataList.length"
     element-loading-text="Loading..."
-    class="bg-white min-h-[100vh] bg-opacity-50 rounded-lg flex flex-wrap justify-center"
+    class="bg-white min-h-[100vh] w-[1200px] m-auto bg-opacity-50 rounded-lg flex flex-wrap justify-center"
   >
     <div
       :class="[

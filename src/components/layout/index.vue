@@ -1,11 +1,10 @@
 <template>
-  <div
-    class="layout min-h-[100vh]"
-    ref="scrollContainer"
-    style="background-image: linear-gradient(120deg, #ffe3e3 0%, #c7ebfd 100%)"
-  >
+  <div class="layout" ref="scrollContainer" style="">
     <div
-      class="header mb-[30px] w-[100vw] flex justify-center bg-[#ffffff]"
+      :class="[
+        'header min-w-[1200px] mb-[30px] flex justify-center bg-[#ffffff]',
+        isFixed ? 'w-[100vw]' : ''
+      ]"
       :style="{
         position: isFixed
         // top
@@ -76,7 +75,7 @@
         </div>
       </div>
     </div>
-    <div class="main m-[auto] w-[1200px] max-[300px]:w-[100vw] max-sm:w-[100vw]">
+    <div class="main">
       <router-view></router-view>
     </div>
     <div
@@ -108,7 +107,7 @@ const initTime = ref()
 
 const handleScroll = (event: any) => {
   if (event.target.children[0].scrollTop > 70) {
-    isFixed.value = 'fixed'
+    // isFixed.value = 'fixed'
     // top.value = '60px'
   } else {
     isFixed.value = ''
