@@ -2,8 +2,7 @@
   <div
     v-loading="loading && !dataList.length"
     element-loading-text="Loading..."
-    class="bg-white min-h-[100vh] w-[100vw] m-auto bg-opacity-50 rounded-lg flex flex-wrap justify-center"
-    v-infinite-scroll="infiniteScroll"
+    class="bg-white w-[1200px] m-auto max-sm:w-[1200px] min-h-[100vh] bg-opacity-50 rounded-lg flex flex-wrap justify-center"
   >
     <div
       :class="[
@@ -16,7 +15,7 @@
         'm-[20px]',
         'flex',
         'justify-center',
-        'items-center'
+        'items-center',
       ]"
     >
       <div
@@ -135,16 +134,21 @@
         </el-image>
       </div>
     </div>
-    <div v-if="!loading" class="text-center w-[100%]">
+    <div v-if="!loading && !isMobile()" class="text-center w-[100%]">
       <el-divider content-position="left">我是有底线的</el-divider>
     </div>
     <div
       v-loading="loading"
       element-loading-text="Loading..."
       element-loading-background="rgba(122, 122, 122, 0)"
-      v-if="loading"
+      v-if="loading && !isMobile()"
       class="bg-opacity-0 m-[10px] rounded-lg w-[100%] text-center leading-48 h-48"
     ></div>
+    <div v-if="isMobile()" class="text-center m-5">
+      <el-button :loading="loading" @click="getDataList()" type="primary" plain>{{
+        loading ? '加载中...' : '加载更多'
+      }}</el-button>
+    </div>
   </div>
 </template>
 
@@ -202,6 +206,20 @@ const infiniteScroll = async () => {
     default:
       await getDataList()
   }
+}
+
+//判断是否为移动端
+const isMobile = () => {
+  const userAgentInfo = navigator.userAgent
+  const Agents = ['Android', 'iPhone', 'SymbianOS', 'Windows Phone', 'iPad', 'iPod']
+  let flag = false
+  for (let v = 0; v < Agents.length; v++) {
+    if (userAgentInfo.indexOf(Agents[v]) > 0) {
+      flag = true
+      break
+    }
+  }
+  return flag
 }
 
 const getDataList = async (sort?: string) => {

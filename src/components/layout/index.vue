@@ -2,7 +2,7 @@
   <div class="layout" ref="scrollContainer" style="">
     <div
       :class="[
-        'header min-w-[1200px] mb-[30px] flex justify-center bg-[#ffffff]',
+        'header mb-[30px] flex justify-center bg-[#ffffff]',
         isFixed ? 'w-[100vw]' : ''
       ]"
       :style="{
@@ -10,7 +10,7 @@
         // top
       }"
     >
-      <div class="menu w-[1200px] max-sm:w-[100vw] h-[100%] flex items-center">
+      <div class="menu w-[1200px] h-[100%] flex items-center">
         <div class="logo flex justify-center w-[140px]">
           <img
             class="w-[100%] mt-[-10px]"
