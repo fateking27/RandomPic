@@ -1,5 +1,5 @@
 <template>
-  <div :class="['w-[1200px] m-auto','flex', 'justify-between']">
+  <div :class="['w-[1200px] m-auto', 'flex', 'justify-between']">
     <div :class="['w-[870px]', 'box-border', 'rounded-lg']">
       <div
         :class="[
@@ -363,6 +363,7 @@ const getNovelDownloadData = async (data: any) => {
   const res: any = await getNovelDownload(data)
   console.log(res.data)
   novelDownloadData.value = res.data
+  if (!res.data.file_size && !res.data.updatetime) return
   if (!res.data.download_url.length) {
     await wenku8Login()
     await getNovelDownloadData({ id: router.currentRoute.value.params.id, type: 'txtfull' })

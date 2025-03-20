@@ -65,7 +65,9 @@ const handleClick = (id: number, chapter?: any) => {
     path: '/article',
     query: {
       article_id_string:
-        novel_id.length < 4 ? '0' : novel_id.toString().split('')[0] + '/' + novel_id + '/' + id
+        novel_id.toString().length < 4
+          ? '0' + '/' + novel_id + '/' + id
+          : novel_id.toString().split('')[0] + '/' + novel_id + '/' + id
     }
   })
 }
