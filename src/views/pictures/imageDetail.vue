@@ -1,5 +1,5 @@
 <template>
-  <div class="flex justify-between">
+  <div class="flex justify-between w-[1200px] m-auto">
     <div
       :class="[
         'left_container',

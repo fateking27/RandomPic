@@ -15,7 +15,7 @@ const router = createRouter({
       children: [
         {
           path: 'home',
-          name: 'Home',
+          name: 'home',
           component: () => import('@/views/home/index.vue'),
           meta: {
             title: '首页',
@@ -24,18 +24,20 @@ const router = createRouter({
         },
         {
           path: 'pictures',
-          name: 'Pictures',
+          name: 'pictures',
           component: () => import('@/views/pictures/index.vue'),
           meta: {
-            title: '次元图库'
+            title: '次元图库',
+            KeepAlive: false
           }
         },
         {
           path: 'imagedetail',
-          name: 'ImageDetail',
+          name: 'imageDetail',
           component: () => import('@/views/pictures/imageDetail.vue'),
           meta: {
-            title: '图片详情'
+            title: '图片详情',
+            KeepAlive: true
           }
         },
         {
@@ -43,36 +45,40 @@ const router = createRouter({
           name: 'uploadImage',
           component: () => import('@/views/pictures/uploadPage.vue'),
           meta: {
-            title: '壁纸上传'
+            title: '壁纸上传',
+            KeepAlive: true
           }
         },
         {
           path: 'animelist',
-          name: 'AnimeList',
+          name: 'animeList',
           component: () => import('@/views/anime/animeList/index.vue'),
           meta: {
-            title: '全部动画'
+            title: '全部动画',
+            KeepAlive: true
           }
         },
         {
           path: 'animecalendar',
-          name: 'AnimeCalendar',
+          name: 'animeCalendar',
           component: () => import('@/views/anime/animeCalendar/index.vue'),
           meta: {
-            title: '新番放送表'
+            title: '新番放送表',
+            KeepAlive: true
           }
         },
         {
           path: 'resource/novel',
-          name: 'ResourceNovel',
+          name: 'resourceNovel',
           component: () => import('@/views/resource/novel/index.vue'),
           meta: {
-            title: '轻小说资源'
+            title: '轻小说资源',
+            KeepAlive: true
           }
         },
         {
           path: 'resource/novel/detail/:id',
-          name: 'ResourceNovelDetail',
+          name: 'resourceNovelDetail',
           component: () => import('@/views/resource/novel/detail.vue'),
           meta: {
             title: '轻小说详情',
@@ -81,7 +87,7 @@ const router = createRouter({
         },
         {
           path: 'resource/novel/chapter/:id',
-          name: 'ResourceNovelChapter',
+          name: 'resourceNovelChapter',
           component: () => import('@/views/resource/novel/chapter.vue'),
           meta: {
             title: '轻小说章节',
@@ -90,7 +96,7 @@ const router = createRouter({
         },
         {
           path: 'resource/novel/novellist',
-          name: 'ResourceNovelList',
+          name: 'resourceNovelList',
           component: () => import('@/views/resource/novel/novelList.vue'),
           meta: {
             title: '轻小说列表',
@@ -104,19 +110,24 @@ const router = createRouter({
       name: 'Article',
       component: () => import('@/views/article/index.vue'),
       meta: {
-        title: '文章'
+        title: '文章',
+        KeepAlive: false
       }
     },
     {
       path: '/randomimg',
       name: 'randomimg',
-      component: () => import('@/views/randomImg/index.vue')
+      component: () => import('@/views/randomImg/index.vue'),
+      meta: {
+        title: '随机图片',
+        KeepAlive: false
+      }
     }
   ]
 })
 
 router.beforeEach((to, from, next) => {
-  document.title = 'ANIMEX | ' + to.meta.title || 'ANIMEX'
+  document.title = 'ANIMEX - ' + to.meta.title || 'ANIMEX'
   next()
 })
 router.afterEach((to, from, failure) => {

@@ -305,7 +305,12 @@ import { View, Postcard, ArrowRightBold, ArrowLeftBold } from '@element-plus/ico
 import dayjs from 'dayjs'
 import type { TabsPaneContext } from 'element-plus'
 
+defineOptions({
+  name: 'home'
+})
+
 import starRate from '@/components/satrRate/index.vue'
+import type { de } from 'element-plus/es/locales.mjs'
 
 const { VITE_IMG_PATH } = import.meta.env
 

@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="w-[1200px] m-auto">
     <div class="anime__calendar min-h-[100vh] flex justify-between">
       <div class="w-[870px] bg-opacity-50 bg-white box-border p-[10px] rounded-lg">
         <div class="h-[auto]">

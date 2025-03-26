@@ -15,7 +15,7 @@
         'm-[20px]',
         'flex',
         'justify-center',
-        'items-center',
+        'items-center'
       ]"
     >
       <div
@@ -157,8 +157,11 @@ import { ref, reactive, onMounted } from 'vue'
 import { imagePageGet } from '@/api/pictures'
 import imgLoading from '@/components/imgLoading/index.vue'
 import { Upload, Sort, TrophyBase, Clock } from '@element-plus/icons-vue'
-import {} from 'vue-router'
 import { useRouter } from 'vue-router'
+
+defineOptions({
+  name: 'pictures'
+})
 
 interface Picture {
   id: number

@@ -184,6 +184,10 @@ import {
   getNovelFinished
 } from '@/api/resource/novel'
 
+defineOptions({
+  name: 'resourceNovel' 
+})
+
 const router = useRouter()
 const novelList = ref<any>([])
 const novelHotAnime = ref<any>({})

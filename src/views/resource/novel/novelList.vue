@@ -10,13 +10,17 @@
           v-for="item in novelListData.rows"
           :key="item.id"
           :title="item.name"
-          @click="toNovelDetail(item.id)"
         >
-          <div :title="item.name" class="h-[160px] bg-opacity-50">
+          <div
+            :title="item.name"
+            class="h-[160px] cursor-pointer rounded-lg overflow-hidden hover:shadow-lg transition-all ease-in-out duration-300"
+            @click="toNovelDetail(item.id)"
+          >
             <el-image style="width: 120px; height: 100%" fit="cover" :src="item.cover"></el-image>
           </div>
           <div class="w-[65%] bg-opacity-50 text-[14px] leading-5">
             <div
+              @click="toNovelDetail(item.id)"
               class="cursor-pointer font-bold max-h-[40px] w-[100%] text-wrap truncate transition-all ease-in-out hover:text-[#ed7b7b]"
             >
               {{ item.name }}
@@ -51,6 +55,11 @@ import { ref, reactive, onMounted } from 'vue'
 import { getNovelList, wenku8Login } from '@/api/resource/novel'
 
 import { useRouter } from 'vue-router'
+
+defineOptions({
+  name: 'resourceNovelList'
+})
+
 const router = useRouter()
 
 const pagination = reactive({
@@ -74,6 +83,7 @@ const getNovelListData = async (pageCount: any) => {
 const handleCurrentChange = async (val: number) => {
   pagination.pageCount = val
   await getNovelListData(pagination.pageCount)
+  window.scrollTo(0, 0)
 }
 
 const toNovelDetail = (id: number) => {

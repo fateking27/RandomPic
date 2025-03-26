@@ -91,6 +91,10 @@ import { getArticle } from '@/api/article'
 
 const { VITE_API_PATH } = import.meta.env
 
+defineOptions({
+  name: 'article'
+})
+
 const articleRef = ref()
 const articleContent = ref({
   id: 0,

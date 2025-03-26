@@ -99,6 +99,7 @@
         <div class="flex justify-around mt-[10px]">
           <div
             v-for="item in 6"
+            :key="item"
             class="bg-opacity-50 bg-white box-border p-[8px] shadow cursor-pointer w-[130px] rounded-lg overflow-hidden"
           >
             <div class="w-[100%] h-[160px] rounded-lg overflow-hidden">
@@ -149,7 +150,7 @@
           <div class="mt-[10px] flex justify-between">
             <div class="flex items-center text-[14px]">
               <el-icon><ChatLineSquare /></el-icon>
-              <span class="p-1">书评吐槽({{ novelCommentListData.total }})</span>
+              <span class="p-1">书评吐槽({{ novelCommentListData?.total }})</span>
             </div>
             <div>
               <el-button type="primary" @click="postNovelComment">发表评论</el-button>
@@ -158,7 +159,7 @@
         </div>
         <div
           :class="['w-[100%]', 'bg-opacity-100', 'bg-white', 'shadow', 'mt-[10px]', 'rounded-lg']"
-          v-for="(item, index) in novelCommentListData.data"
+          v-for="item in novelCommentListData?.data"
           :key="item.id"
         >
           <div class="flex items-center justify-between p-[10px]">
@@ -175,6 +176,14 @@
           </div>
           <div class="p-[10px]" v-html="item.content" />
         </div>
+        <div
+          :class="['w-[100%]', 'bg-opacity-100', 'bg-white', 'shadow', 'mt-[10px]', 'rounded-lg']"
+          v-if="!novelCommentListData.data?.length"
+        >
+          <div class="p-[10px] text-[#918f8f] h-[100px] flex justify-center items-center">
+            暂无评论
+          </div>
+        </div>
         <div class="w-[100%] flex justify-center">
           <el-pagination
             size="small"
@@ -182,7 +191,7 @@
             layout="prev, pager, next"
             :hide-on-single-page="true"
             :page-size="pagination.pageSize"
-            :total="novelCommentListData.total"
+            :total="novelCommentListData?.total"
             @current-change="handleCurrentChange"
             class="mt-4"
           />
@@ -231,6 +240,7 @@
         class="p-[5px]"
         type="primary"
         v-for="(item, index) in novelDownloadData.download_url"
+        :key="index"
         el-link
         >链接{{ index + 1 }}({{ item.name }})</el-link
       >
@@ -259,6 +269,8 @@ import {
 import { reactive } from 'vue'
 
 const router = useRouter()
+
+const { VITE_NOVEL_COVER_PATH } = import.meta.env
 
 const comment = ref<string>('')
 const centerDialogVisible = ref(false)
@@ -331,6 +343,7 @@ const getNovelDetailData = async () => {
   const res: any = await getNovelDetail({ id })
   document.title = res.data.name
   novelDetailData.value = res.data
+  novelDetailData.value.cover = VITE_NOVEL_COVER_PATH + novelDetailData.value.cover
 }
 
 const getNovelChaptersData = async () => {
@@ -361,13 +374,11 @@ const postNovelComment = async () => {
 
 const getNovelDownloadData = async (data: any) => {
   const res: any = await getNovelDownload(data)
-  console.log(res.data)
   novelDownloadData.value = res.data
   if (!res.data.file_size && !res.data.updatetime) return
   if (!res.data.download_url.length) {
     await wenku8Login()
     await getNovelDownloadData({ id: router.currentRoute.value.params.id, type: 'txtfull' })
-    // return
   }
 }
 
@@ -378,7 +389,7 @@ const pagination = reactive({
 
 const commentCount = ref(0)
 
-const novelCommentListData = ref<any>([])
+const novelCommentListData = ref<any>({})
 const getNovelCommentListData = async () => {
   const res: any = await novelCommentList({
     novel_id: router.currentRoute.value.params.id,
@@ -399,10 +410,17 @@ const handleCurrentChange = async (val: number) => {
 }
 
 onMounted(async () => {
+  if (router.currentRoute.value.params.id == 'undefined') {
+    novelDetailData.value = {
+      name: '非常抱歉，该小说暂未收录',
+      cover: '/404.png'
+    }
+    return
+  }
   await getNovelDetailData()
   await getNovelChaptersData()
-  getNovelDownloadData({ id: router.currentRoute.value.params.id, type: 'txtfull' })
-  getNovelCommentListData()
+  await getNovelDownloadData({ id: router.currentRoute.value.params.id, type: 'txtfull' })
+  await getNovelCommentListData()
 })
 </script>
 

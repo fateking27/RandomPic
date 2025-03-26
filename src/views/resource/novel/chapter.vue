@@ -42,6 +42,10 @@ import dayjs from 'dayjs'
 
 import { getNovelDetail, getNovelChapters } from '@/api/resource/novel'
 
+defineOptions({
+  name: 'resourceNovelDetail' 
+})
+
 const router = useRouter()
 const novel_id = router.currentRoute.value.params.id
 const novelChaptersData = ref<any>({})

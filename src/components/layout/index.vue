@@ -1,10 +1,7 @@
 <template>
   <div class="layout" ref="scrollContainer" style="">
     <div
-      :class="[
-        'header mb-[30px] flex justify-center bg-[#ffffff]',
-        isFixed ? 'w-[100vw]' : ''
-      ]"
+      :class="['header mb-[30px] flex justify-center bg-[#ffffff]', isFixed ? 'w-[100vw]' : '']"
       :style="{
         position: isFixed
         // top
@@ -76,7 +73,12 @@
       </div>
     </div>
     <div class="main">
-      <router-view></router-view>
+      <router-view v-slot="{ Component }">
+        <keep-alive>
+          <component :is="Component" v-if="$route.meta.KeepAlive" :key="$route.fullPath"/>
+        </keep-alive>
+        <component :is="Component" v-if="!$route.meta.KeepAlive" />
+      </router-view>
     </div>
     <div
       class="footer mt-5 bg-[#e3e3e3] bg-opacity-40 text-center text-[#666] text-[12px] pt-5 pb-10 text-wrap"
@@ -107,7 +109,7 @@ const initTime = ref()
 
 const handleScroll = (event: any) => {
   if (event.target.children[0].scrollTop > 70) {
-    // isFixed.value = 'fixed'
+    isFixed.value = 'fixed'
     // top.value = '60px'
   } else {
     isFixed.value = ''
