@@ -24,6 +24,9 @@ newAxios.interceptors.request.use((config) => {
       iv: iv.toString(CryptoJS.enc.Hex)
     }
   } else if (config.data && VITE_IS_ENCRYPT == 'true') {
+    if (config.headers['Content-Type'] == 'multipart/form-data') {
+      return config
+    }
     config.data = {
       encryptedData: Crypto.encrypt(JSON.stringify(config.data), key, iv),
       iv: iv.toString(CryptoJS.enc.Hex)
@@ -37,6 +40,7 @@ newAxios.interceptors.request.use((config) => {
 // 响应拦截
 newAxios.interceptors.response.use(
   async (res) => {
+    if (!res.data.encryptedData && !res.data.iv) return res.data
     // 解密
     const encrypted = res.data
     const iv = CryptoJS.enc.Hex.parse(encrypted.iv)

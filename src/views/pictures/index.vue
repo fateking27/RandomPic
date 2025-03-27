@@ -2,6 +2,7 @@
   <div
     v-loading="loading && !dataList.length"
     element-loading-text="Loading..."
+    v-infinite-scroll="infiniteScroll"
     class="bg-white w-[1200px] m-auto max-sm:w-[1200px] min-h-[100vh] bg-opacity-50 rounded-lg flex flex-wrap justify-center"
   >
     <div
@@ -90,7 +91,7 @@
         <p class="text-[16px]">Upload</p>
       </div>
     </div>
-    <div class="flex flex-wrap justify-center" v-infinite-scroll="infiniteScroll">
+    <div class="flex flex-wrap justify-center">
       <div
         class="picture-item relative h-[150px] w-[270px] leading-[150px] text-center m-[10px] rounded-md overflow-hidden cursor-pointer"
         v-for="item in dataList"
